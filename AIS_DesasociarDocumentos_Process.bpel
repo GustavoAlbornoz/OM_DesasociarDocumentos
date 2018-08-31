@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="UTF-8"?><bpws:process xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/" xmlns:ns="http://TOMPHVO/AIS/AIS_DesasociarDocumentos/AIS_DesasociarDocumentos_ProcessArtifacts" xmlns:ns0="http://TOMPHVO" xmlns:ns1="http://TOMPHVO/AIS/AIS_DesasociarDocumentos" xmlns:ns2="http://OM_DesasociarDocumentos" xmlns:ns3="http://OM_DesasociarDocumentos/DatosDocumentos" xmlns:ns4="http://OM_DesasociarDocumentos/DesasociarDocumentoREST" xmlns:ns5="http://OM_DesasociarDocumentos/UpdateDocs" xmlns:ns6="http://OM_DesasociarDocumentos/HttpDesasociar" xmlns:wpc="http://www.ibm.com/xmlns/prod/websphere/business-process/6.0.0/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.ibm.com/xmlns/prod/websphere/business-process/expression-lang/java/6.0.0/" name="AIS_DesasociarDocumentos_Process" suppressJoinFailure="yes" targetNamespace="http://TOMPHVO/AIS/AIS_DesasociarDocumentos" wpc:continueOnError="no" wpc:displayName="AIS_DesasociarDocumentos_Process" wpc:executionMode="microflow" wpc:id="1" wpc:validFrom="2018-08-06T16:52:59" wpc:version="IBM_8.5.500">
+  <wpc:javaGlobals>
+    <wpc:import packages="com.main.logger.Log"/>
+    <wpc:import packages="commonj.sdo.DataObject"/>
+    <wpc:import packages="com.ibm.websphere.sca.ServiceManager"/>
+    <wpc:import packages="java.util.*"/>
+  </wpc:javaGlobals>
+  <bpws:import importType="http://schemas.xmlsoap.org/wsdl/" location="AIS_DesasociarDocumentos.wsdl" namespace="http://TOMPHVO/AIS/AIS_DesasociarDocumentos"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="input_DesasociarDocumentos.xsd" namespace="http://TOMPHVO"/>
+  <bpws:import importType="http://schemas.xmlsoap.org/wsdl/" location="AIS_DesasociarDocumentos_ProcessArtifacts.wsdl" namespace="http://TOMPHVO/AIS/AIS_DesasociarDocumentos/AIS_DesasociarDocumentos_ProcessArtifacts"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="output_DesasociarDocumentos.xsd" namespace="http://TOMPHVO"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="BuscarDocumentos.xsd" namespace="http://OM_DesasociarDocumentos"/>
+  <bpws:import importType="http://schemas.xmlsoap.org/wsdl/" location="DatosDocumentos.wsdl" namespace="http://OM_DesasociarDocumentos/DatosDocumentos"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="out_BuscarDocumentos.xsd" namespace="http://OM_DesasociarDocumentos"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="in_BuscarDocumentos.xsd" namespace="http://OM_DesasociarDocumentos"/>
+  <bpws:import importType="http://schemas.xmlsoap.org/wsdl/" location="DesasociarDocumentoREST.wsdl" namespace="http://OM_DesasociarDocumentos/DesasociarDocumentoREST"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="out_DesaREST.xsd" namespace="http://OM_DesasociarDocumentos"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="in_DesaREST.xsd" namespace="http://OM_DesasociarDocumentos"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="in_UpdateDocs.xsd" namespace="http://OM_DesasociarDocumentos"/>
+  <bpws:import importType="http://schemas.xmlsoap.org/wsdl/" location="UpdateDocs.wsdl" namespace="http://OM_DesasociarDocumentos/UpdateDocs"/>
+  <bpws:import importType="http://www.w3.org/2001/XMLSchema" location="out_UpdateDocs.xsd" namespace="http://OM_DesasociarDocumentos"/>
+  <bpws:import importType="http://schemas.xmlsoap.org/wsdl/" location="HttpDesasociar.wsdl" namespace="http://OM_DesasociarDocumentos/HttpDesasociar"/>
+  <bpws:partnerLinks>
+    <bpws:partnerLink myRole="Interface" name="AIS_DesasociarDocumentos" partnerLinkType="ns:AIS_DesasociarDocumentosPLT" wpc:id="2"/>
+    <bpws:partnerLink name="DatosDocumentosPartner" partnerLinkType="ns:DatosDocumentosPartnerPLT" partnerRole="Reference" wpc:id="38"/>
+    <bpws:partnerLink name="UpdateDocsPartner" partnerLinkType="ns:UpdatePartnerPLT" partnerRole="Reference" wpc:id="51"/>
+    <bpws:partnerLink name="HttpDesasociarPartner" partnerLinkType="ns:HttpDesasociarPartnerPLT" partnerRole="Reference" wpc:id="106"/>
+  </bpws:partnerLinks>
+  <bpws:variables>
+    <bpws:variable name="input_DesasociarDocs" type="ns0:input_DesasociarDocumentos" wpc:id="6"/>
+    <bpws:variable name="output_DesasociarDocumentos" type="ns0:output_DesasociarDocumentos" wpc:id="7"/>
+    <bpws:variable name="uuid" type="xsd:string" wpc:id="34"/>
+    <bpws:variable name="documentoAux_In" type="ns2:in_BuscarDocumentos" wpc:id="36"/>
+    <bpws:variable name="input_BuscarDocs" type="ns2:in_BuscarDocumentos" wpc:id="41"/>
+    <bpws:variable name="documentoAux_out" type="ns2:out_BuscarDocumentos" wpc:id="42"/>
+    <bpws:variable name="time_inicio" type="xsd:long" wpc:id="45"/>
+    <bpws:variable name="time_fin" type="xsd:long" wpc:id="46"/>
+    <bpws:variable name="out_DesasociarREST" type="ns2:out_DesaREST" wpc:id="49"/>
+    <bpws:variable name="error" type="xsd:boolean" wpc:id="67"/>
+    <bpws:variable name="in_updateDocs" type="ns2:in_UpdateDocs" wpc:id="86"/>
+    <bpws:variable name="estado" type="ns2:out_UpdateDocs" wpc:id="87"/>
+    <bpws:variable name="in_DesasociarREST" type="ns2:in_DesaREST" wpc:id="91"/>
+    <bpws:variable name="partner" type="xsd:int" wpc:id="92"/>
+    <bpws:variable name="Response" type="xsd:string" wpc:id="104"/>
+    <bpws:variable name="auxInputDesasociarDocs" type="ns0:input_DesasociarDocumentos" wpc:id="127"/>
+  </bpws:variables>
+  <bpws:sequence name="HiddenSequence" wpc:id="1073741827">
+    <bpws:receive createInstance="yes" name="Receive" operation="invoke" partnerLink="AIS_DesasociarDocumentos" portType="ns1:AIS_DesasociarDocumentos" wpc:displayName="Receive" wpc:id="4" wpc:transactionalBehavior="commitAfter">
+      <wpc:output>
+        <wpc:parameter name="input_DesasociarDocumentos" variable="input_DesasociarDocs"/>
+      </wpc:output>
+    </bpws:receive>
+    <bpws:invoke name="Snippet_LogInicio" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="Log Inicio" wpc:id="32">
+      <wpc:script>
+        <wpc:javaCode><![CDATA[time_inicio = System.currentTimeMillis();
+uuid = processInstance().getID().toString();
+Log.logTomAplicaciones_info(uuid + ";BPEL;" + processInstance().getDisplayName() + "Inicio " + uuid);
+]]></wpc:javaCode>
+      </wpc:script>
+    </bpws:invoke>
+    <bpws:invoke name="DataMap1" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="Mapeo a Auxiliar de input de AIS" wpc:id="126">
+      <wpc:script>
+        <wpc:javaCode><![CDATA[commonj.sdo.DataObject __result__2;
+{// create input_DesasociarDocumentos
+	com.ibm.websphere.bo.BOFactory factory = 
+	   (com.ibm.websphere.bo.BOFactory) new com.ibm.websphere.sca.ServiceManager().locateService("com/ibm/websphere/bo/BOFactory");
+	 __result__2 = factory.create("http://TOMPHVO","input_DesasociarDocumentos");
+}
+auxInputDesasociarDocs = __result__2;
+java.lang.Object __result__4 = null;
+try {
+	{// Mapeo_input
+		java.util.HashMap inputMap = new java.util.HashMap();
+		java.util.HashMap outputMap = new java.util.HashMap();
+		inputMap.put("input_DesasociarDocumentos", input_DesasociarDocs);
+		outputMap.put("input_DesasociarDocumentos_1", auxInputDesasociarDocs);
+		com.ibm.wbiserver.map.MapService _serv = 
+			(com.ibm.wbiserver.map.MapService)new com.ibm.websphere.sca.ServiceManager().locateService("com/ibm/wbiserver/map/MapService");
+		_serv.transform("http://OM_DesasociarDocumentos", "Mapeo_input", inputMap, outputMap, ((com.ibm.wbiserver.relationshipservice.common.ExecutionContext)__result__4));
+	}
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapFailureException ex){
+	ex.printStackTrace();
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException ex){
+	ex.printStackTrace();
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapServiceException ex){
+	ex.printStackTrace();
+}
+
+//@generated:com.ibm.wbit.activity.ui
+//<?xml version="1.0" encoding="UTF-8"?>
+//<com.ibm.wbit.activity:CompositeActivity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ibm.wbit.activity="http:///com/ibm/wbit/activity.ecore" name="ActivityMethod">
+//  <exceptions>
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.bpe.api.ProcessException"/>
+//  </exceptions>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="input_DesasociarDocs" variable="true">
+//    <dataOutputs target="//@executableElements.4/@parameters.0"/>
+//    <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="input_DesasociarDocumentos" namespace="http://TOMPHVO"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:LibraryActivity" name="create input_DesasociarDocumentos" description="create a new input_DesasociarDocumentos {http://TOMPHVO}" template="com.ibm.websphere.bo.BOFactory factory = &#xA;   (com.ibm.websphere.bo.BOFactory) new com.ibm.websphere.sca.ServiceManager().locateService(&quot;com/ibm/websphere/bo/BOFactory&quot;);&#xA; &lt;%return%> factory.create(&quot;http://TOMPHVO&quot;,&quot;input_DesasociarDocumentos&quot;);">
+//    <result>
+//      <dataOutputs target="//@executableElements.2"/>
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="input_DesasociarDocumentos" namespace="http://TOMPHVO"/>
+//    </result>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" dataInputs="//@executableElements.1/@result/@dataOutputs.0" value="auxInputDesasociarDocs" variable="true">
+//    <dataOutputs target="//@executableElements.4/@parameters.1"/>
+//    <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="input_DesasociarDocumentos" namespace="http://TOMPHVO"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="null" assignable="false">
+//    <dataOutputs target="//@executableElements.4/@parameters.2"/>
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Object"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:LibraryActivity" name="Mapeo_input" description="perform mapping {0}Mapeo_input {http://OM_DesasociarDocumentos}" template="java.util.HashMap inputMap = new java.util.HashMap();&#xA;java.util.HashMap outputMap = new java.util.HashMap();&#xA;inputMap.put(&quot;input_DesasociarDocumentos&quot;, &lt;%input_DesasociarDocumentos%>);&#xA;outputMap.put(&quot;input_DesasociarDocumentos_1&quot;, &lt;%input_DesasociarDocumentos_1%>);&#xA;com.ibm.wbiserver.map.MapService _serv = &#xA;&#x9;(com.ibm.wbiserver.map.MapService)new com.ibm.websphere.sca.ServiceManager().locateService(&quot;com/ibm/wbiserver/map/MapService&quot;);&#xA;_serv.transform(&quot;http://OM_DesasociarDocumentos&quot;, &quot;Mapeo_input&quot;, inputMap, outputMap, &lt;%executionContext%>);">
+//    <parameters name="input_DesasociarDocumentos" dataInputs="//@executableElements.0/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="input_DesasociarDocumentos" namespace="http://TOMPHVO"/>
+//    </parameters>
+//    <parameters name="input_DesasociarDocumentos_1" dataInputs="//@executableElements.2/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="input_DesasociarDocumentos" namespace="http://TOMPHVO"/>
+//    </parameters>
+//    <parameters name="executionContext" dataInputs="//@executableElements.3/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.relationshipservice.common.ExecutionContext"/>
+//    </parameters>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.5/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </exceptions>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.6/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </exceptions>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.7/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </exceptions>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.0/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" variable="true">
+//      <dataOutputs target="//@executableElements.5/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.5/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//    <executableGroups executableElements="//@executableElements.5/@executableElements.0 //@executableElements.5/@executableElements.1"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.1/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" variable="true">
+//      <dataOutputs target="//@executableElements.6/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.6/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//    <executableGroups executableElements="//@executableElements.6/@executableElements.0 //@executableElements.6/@executableElements.1"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.2/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" variable="true">
+//      <dataOutputs target="//@executableElements.7/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.7/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//    <executableGroups executableElements="//@executableElements.7/@executableElements.0 //@executableElements.7/@executableElements.1"/>
+//  </executableElements>
+//  <executableGroups executableElements="//@executableElements.0 //@executableElements.1 //@executableElements.2 //@executableElements.3 //@executableElements.4 //@executableElements.5 //@executableElements.6 //@executableElements.7"/>
+//</com.ibm.wbit.activity:CompositeActivity>
+//@generated:end
+//!SMAP!*S WBIACTDBG
+//!SMAP!*L
+//!SMAP!2:1,6
+//!SMAP!3:7,1
+//!SMAP!4:8,1
+//!SMAP!5:10,9
+//!SMAP!8:21,1
+//!SMAP!11:24,1
+//!SMAP!14:27,1
+//!SMAP!1000000:135,1]]></wpc:javaCode>
+      </wpc:script>
+    </bpws:invoke>
+    <bpws:invoke name="RemoverDocumentos" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="Filtrar Docs en Estado Faltante" wpc:id="120">
+      <wpc:script>
+        <wpc:javaCode><![CDATA[List<DataObject> auxRem = new ArrayList<DataObject>();
+int tamaño = auxInputDesasociarDocs.getList("documento").size();
+
+for(int j = 0; j < tamaño; j++){
+
+   DataObject auxEliminarDocs = (DataObject)auxInputDesasociarDocs.getList("documento").get(j);
+  
+   int valorEstado = Integer.parseInt(auxEliminarDocs.getDataObject("estado").getString("value"));
+  
+   //System.out.println("valor de estado: "+auxEliminarDocs.getDataObject("estado").getString("value"));
+   //System.out.println("valor de estado: "+valorEstado);
+
+    if(valorEstado != 3){
+        auxRem.add(auxEliminarDocs);
+    }
+}
+
+/*
+System.out.println("valores de inputdesasociar antes: "+auxInputDesasociarDocs.getList("documento"));
+*/
+
+auxInputDesasociarDocs.getList("documento").removeAll(auxRem);
+
+//System.out.println("valores de inputdesasociar dsp: "+auxInputDesasociarDocs.getList("documento"));]]></wpc:javaCode>
+      </wpc:script>
+    </bpws:invoke>
+    <bpws:invoke name="MapeoDocumentos" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="Mapeo de Valores de Documentos" wpc:id="128">
+      <wpc:script>
+        <wpc:javaCode><![CDATA[commonj.sdo.DataObject __result__2;
+{// create in_BuscarDocumentos
+	com.ibm.websphere.bo.BOFactory factory = 
+	   (com.ibm.websphere.bo.BOFactory) new com.ibm.websphere.sca.ServiceManager().locateService("com/ibm/websphere/bo/BOFactory");
+	 __result__2 = factory.create("http://OM_DesasociarDocumentos","in_BuscarDocumentos");
+}
+documentoAux_In = __result__2;
+java.lang.Object __result__4 = null;
+try {
+	{// MapeoValoresDocumentos
+		java.util.HashMap inputMap = new java.util.HashMap();
+		java.util.HashMap outputMap = new java.util.HashMap();
+		inputMap.put("input_DesasociarDocumentos", auxInputDesasociarDocs);
+		outputMap.put("in_BuscarDocumentos", documentoAux_In);
+		com.ibm.wbiserver.map.MapService _serv = 
+			(com.ibm.wbiserver.map.MapService)new com.ibm.websphere.sca.ServiceManager().locateService("com/ibm/wbiserver/map/MapService");
+		_serv.transform("http://OM_DesasociarDocumentos", "MapeoValoresDocumentos", inputMap, outputMap, ((com.ibm.wbiserver.relationshipservice.common.ExecutionContext)__result__4));
+	}
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapFailureException ex){
+	com.ibm.wbiserver.map.exceptions.WBIMapFailureException __result__7;
+	ex.printStackTrace();
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException ex){
+	com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException __result__10;
+	ex.printStackTrace();
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapServiceException ex){
+	com.ibm.wbiserver.map.exceptions.WBIMapServiceException __result__13;
+	ex.printStackTrace();
+}
+
+//@generated:com.ibm.wbit.activity.ui
+//<?xml version="1.0" encoding="UTF-8"?>
+//<com.ibm.wbit.activity:CompositeActivity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ibm.wbit.activity="http:///com/ibm/wbit/activity.ecore" name="ActivityMethod">
+//  <result name="Result">
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="void"/>
+//  </result>
+//  <exceptions>
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.bpe.api.ProcessException"/>
+//  </exceptions>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="auxInputDesasociarDocs" variable="true">
+//    <dataOutputs target="//@executableElements.4/@parameters.0"/>
+//    <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="input_DesasociarDocumentos" namespace="http://TOMPHVO"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:LibraryActivity" name="create in_BuscarDocumentos" description="create a new in_BuscarDocumentos {http://OM_DesasociarDocumentos}" template="com.ibm.websphere.bo.BOFactory factory = &#xA;   (com.ibm.websphere.bo.BOFactory) new com.ibm.websphere.sca.ServiceManager().locateService(&quot;com/ibm/websphere/bo/BOFactory&quot;);&#xA; &lt;%return%> factory.create(&quot;http://OM_DesasociarDocumentos&quot;,&quot;in_BuscarDocumentos&quot;);">
+//    <result>
+//      <dataOutputs target="//@executableElements.2"/>
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="in_BuscarDocumentos" namespace="http://OM_DesasociarDocumentos"/>
+//    </result>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" dataInputs="//@executableElements.1/@result/@dataOutputs.0" value="documentoAux_In" variable="true">
+//    <dataOutputs target="//@executableElements.4/@parameters.1"/>
+//    <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="in_BuscarDocumentos" namespace="http://OM_DesasociarDocumentos"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="null" assignable="false">
+//    <dataOutputs target="//@executableElements.4/@parameters.2"/>
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Object"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:LibraryActivity" name="MapeoValoresDocumentos" description="perform mapping {0}MapeoValoresDocumentos {http://OM_DesasociarDocumentos}" template="java.util.HashMap inputMap = new java.util.HashMap();&#xA;java.util.HashMap outputMap = new java.util.HashMap();&#xA;inputMap.put(&quot;input_DesasociarDocumentos&quot;, &lt;%input_DesasociarDocumentos%>);&#xA;outputMap.put(&quot;in_BuscarDocumentos&quot;, &lt;%in_BuscarDocumentos%>);&#xA;com.ibm.wbiserver.map.MapService _serv = &#xA;&#x9;(com.ibm.wbiserver.map.MapService)new com.ibm.websphere.sca.ServiceManager().locateService(&quot;com/ibm/wbiserver/map/MapService&quot;);&#xA;_serv.transform(&quot;http://OM_DesasociarDocumentos&quot;, &quot;MapeoValoresDocumentos&quot;, inputMap, outputMap, &lt;%executionContext%>);">
+//    <parameters name="input_DesasociarDocumentos" dataInputs="//@executableElements.0/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="input_DesasociarDocumentos" namespace="http://TOMPHVO"/>
+//    </parameters>
+//    <parameters name="in_BuscarDocumentos" dataInputs="//@executableElements.2/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="in_BuscarDocumentos" namespace="http://OM_DesasociarDocumentos"/>
+//    </parameters>
+//    <parameters name="executionContext" dataInputs="//@executableElements.3/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.relationshipservice.common.ExecutionContext"/>
+//    </parameters>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.5/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </exceptions>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.6/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </exceptions>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.7/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </exceptions>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.0/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" input="true">
+//      <dataOutputs target="//@executableElements.5/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.5/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.1/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" input="true">
+//      <dataOutputs target="//@executableElements.6/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.6/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.2/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" input="true">
+//      <dataOutputs target="//@executableElements.7/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.7/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//  </executableElements>
+//</com.ibm.wbit.activity:CompositeActivity>
+//@generated:end
+//!SMAP!*S WBIACTDBG
+//!SMAP!*L
+//!SMAP!2:1,6
+//!SMAP!3:7,1
+//!SMAP!4:8,1
+//!SMAP!5:10,9
+//!SMAP!7:21,1
+//!SMAP!8:22,1
+//!SMAP!10:25,1
+//!SMAP!11:26,1
+//!SMAP!13:29,1
+//!SMAP!14:30,1
+//!SMAP!1000000:140,1]]></wpc:javaCode>
+      </wpc:script>
+    </bpws:invoke>
+    <bpws:invoke name="Invoke" operation="BuscarDatos" partnerLink="DatosDocumentosPartner" portType="ns3:DatosDocumentos" wpc:continueOnError="inherit" wpc:displayName="SeleccionarDocumento" wpc:id="39">
+      <wpc:input>
+        <wpc:parameter name="input_BuscarDatos" variable="documentoAux_In"/>
+      </wpc:input>
+      <wpc:output>
+        <wpc:parameter name="output_BuscarDatos" variable="documentoAux_out"/>
+      </wpc:output>
+      <bpws:catchAll wpc:id="43">
+        <bpws:invoke name="SnippetErrorSelect" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="ErrorCantidadDocs" wpc:id="44">
+          <wpc:script>
+            <wpc:javaCode><![CDATA[time_fin = System.currentTimeMillis();
+String MENSAJE = "Tiempo: " + (System.currentTimeMillis() - time_inicio) + " ms. Fin de proceso de seleccion de documentos"; 
+Log.logTomAplicaciones_error(uuid + ";BPEL;" + processInstance().getDisplayName()+ ";" + "MENSAJE");
+]]></wpc:javaCode>
+          </wpc:script>
+        </bpws:invoke>
+      </bpws:catchAll>
+    </bpws:invoke>
+    <bpws:forEach counterName="Index2" name="PorCadaElemento" parallel="no" wpc:counterVariableId="81" wpc:displayName="Por Cada Elemento" wpc:id="72">
+      <bpws:startCounterValue expressionLanguage="http://www.w3.org/TR/1999/REC-xpath-19991116"><![CDATA[1]]></bpws:startCounterValue>
+      <bpws:finalCounterValue expressionLanguage="http://www.w3.org/TR/1999/REC-xpath-19991116"><![CDATA[count($documentoAux_out/BuscarDocumentos)]]></bpws:finalCounterValue>
+      <bpws:scope name="Scope" wpc:id="74">
+        <bpws:sequence name="HiddenSequence2" wpc:id="1073741899">
+          <bpws:switch name="Choice1" wpc:displayName="Documento con valor nulo?" wpc:id="129">
+            <bpws:case wpc:displayName="No" wpc:id="130">
+              <bpws:condition expressionLanguage="http://www.ibm.com/xmlns/prod/websphere/business-process/expression-lang/java/6.0.0/"><![CDATA[boolean __result__1 = false;
+
+int i = Index2.intValue() - 1;
+
+DataObject aux2 = (DataObject)documentoAux_out.getList("BuscarDocumentos").get(i);
+
+if (aux2 != null){
+      __result__1 = true;
+}
+
+return __result__1;
+]]></bpws:condition>
+              <bpws:invoke name="Snippet_SetUrl" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="Setear Url" wpc:id="35">
+                <wpc:script>
+                  <wpc:javaCode><![CDATA[com.ibm.websphere.bo.BOFactory boFactory = (com.ibm.websphere.bo.BOFactory) ServiceManager.INSTANCE.locateService("com/ibm/websphere/bo/BOFactory");
+
+int i = Index2.intValue() - 1;
+DataObject auxBuscarDocumentos = (DataObject)documentoAux_out.getList("BuscarDocumentos").get(i);
+
+/*
+try {
+	com.ibm.websphere.bo.BOXMLSerializer serializer =(com.ibm.websphere.bo.BOXMLSerializer) com.ibm.websphere.sca.ServiceManager.INSTANCE.locateService("com/ibm/websphere/bo/BOXMLSerializer");
+	java.io.ByteArrayOutputStream stream = new java.io.ByteArrayOutputStream();
+	serializer.writeDataObject(auxBuscarDocumentos,auxBuscarDocumentos.getType().getURI(),auxBuscarDocumentos.getType().getName(),stream);
+	System.out.println("Request BUS: " + stream.toString());
+	Log.logTomAplicaciones_info("Request BUS: " + stream.toString());
+	} catch (Exception e)  {
+		Log.logTomAplicaciones_error("Fallo el Request " + e.getMessage());
+	}
+*/
+
+String id_docsys = auxBuscarDocumentos.getString("idDocsys").trim();
+String id_filenet = auxBuscarDocumentos.getString("idFilenet").trim();
+String id_proceso = "0011";
+String id_subproceso = "02";
+String id_operacion = auxBuscarDocumentos.getString("idOperacion").trim();
+String id_host = auxBuscarDocumentos.getString("idHost").trim();
+
+String URL = "http://dfnet1was01.bancogalicia.com.ar/desasociar/api/desasociar/"+id_docsys+"/"+id_filenet+"/"+id_proceso+"/"+id_subproceso+"/"+id_operacion+"/"+id_host;
+//String URL = "http://dfnet1was01.bancogalicia.com.ar/desasociar/api/desasociar/14648966/E0833F65-0000-CF12-B05F-42E406142895/0011/02/1-9N36DF6/14648966";
+//System.out.println(URL);
+//DataObject URL = boFactory.create("http://OM_DesasociarDocumentos","in_DesaREST");
+//URL.setString("url", "http://dfnet1was01.bancogalicia.com.ar/desasociar/api/desasociar/"+id_docsys+"/"+id_filenet+"/"+id_proceso+"/"+id_subproceso+"/"+id_operacion+"/"+id_host);
+//URL= "http://dfnet1was01.bancogalicia.com.ar/desasociar/api/desasociar/"+id_docsys+"/"+id_filenet+"/"+id_proceso+"/"+id_subproceso+"/"+id_operacion+"/"+id_host;
+//URL="https://desafilenet2.bancogalicia.com.ar:9080/desasociar/api/desasociar/33665575/{1837079C-EF0F-4E42-A689-EBEF8AFB4E0B}/7/3/1234/9000167803 ";
+//URL="http://desafilenet2.bancogalicia.com.ar:9080/desasociar_prueba/api/desasociar/33663723/"+URLEncoder.encode("{C38942E7-2346-447C-9194-C6F205C451F8}", "UTF-8")+"/7/2/922634/1312611";
+//URL DESA "http://dwebsp01.bancogalicia.com.ar:9082/desasociar/rest/desasociar/"+id_docsys+"/"+id_filenet+"/"+id_proceso+"/"+id_subproceso+"/"+id_operacion+"/"+id_host;
+//URL HOMO http://hcesfilenet01.bancogalicia.com.ar/desasociar/api/database/desasociar/33665575/{1837079C-EF0F-4E42-A689-EBEF8AFB4E0B}/7/3/1234/9000167803
+
+Log.logTomAplicaciones_debug("REST URL: " + URL);
+
+DataObject endref = getServiceRefFromPartnerLink("HttpDesasociarPartner",PARTNER_LINK_PARTNER_ROLE);
+endref.set("EndpointReference/Address/value", URL);
+setServiceRefToPartnerLink("HttpDesasociarPartner", endref);
+]]></wpc:javaCode>
+                </wpc:script>
+              </bpws:invoke>
+            </bpws:case>
+            <bpws:otherwise wpc:id="131">
+              <bpws:invoke name="ErrorDocumentoNulo" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="ErrorDocumentoNulo" wpc:id="108">
+                <wpc:script>
+                  <wpc:javaCode><![CDATA[time_fin = System.currentTimeMillis();
+String MENSAJE = "Tiempo: " + (System.currentTimeMillis() - time_inicio) + " ms. Documento con valor nulo"; 
+Log.logTomAplicaciones_error(uuid + ";BPEL;" + processInstance().getDisplayName()+ ";" + "MENSAJE");]]></wpc:javaCode>
+                </wpc:script>
+              </bpws:invoke>
+            </bpws:otherwise>
+          </bpws:switch>
+          <bpws:invoke name="Invoke1" operation="HTTPDesas" partnerLink="HttpDesasociarPartner" portType="ns6:HttpDesasociar" wpc:continueOnError="inherit" wpc:displayName="DesasociarDocumentoHTTP" wpc:id="105">
+            <wpc:input>
+              <wpc:parameter name="input_desas" variable="in_DesasociarREST"/>
+            </wpc:input>
+            <wpc:output>
+              <wpc:parameter name="output_desas" variable="out_DesasociarREST"/>
+            </wpc:output>
+            <bpws:catchAll wpc:id="107">
+              <bpws:invoke name="ErrorDesasociarDocumento" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="ErrorDesasociarDocumento" wpc:id="132">
+                <wpc:script>
+                  <wpc:javaCode><![CDATA[time_fin = System.currentTimeMillis();
+String MENSAJE = "Tiempo: " + (System.currentTimeMillis() - time_inicio) + " ms. Documento con valor nulo"; 
+Log.logTomAplicaciones_error(uuid + ";BPEL;" + processInstance().getDisplayName()+ ";" + "MENSAJE");]]></wpc:javaCode>
+                </wpc:script>
+              </bpws:invoke>
+            </bpws:catchAll>
+          </bpws:invoke>
+          <bpws:switch name="DesaExitoso" wpc:displayName="Desasociar exitoso?" wpc:id="61">
+            <wpc:description><![CDATA[%wf:variable.out_DesasociarREST\\codigo% == '00']]></wpc:description>
+            <bpws:case wpc:displayName="Si" wpc:id="62">
+              <bpws:condition expressionLanguage="http://www.ibm.com/xmlns/prod/websphere/business-process/expression-lang/java/6.0.0/"><![CDATA[boolean __result__1 = false;
+
+int valorIf = Integer.parseInt(out_DesasociarREST.getString("codigo"));
+
+if (valorIf == 0){
+__result__1 = true;}
+
+return __result__1;
+]]></bpws:condition>
+              <bpws:invoke name="DataMap" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="DataMap" wpc:id="96">
+                <wpc:script>
+                  <wpc:javaCode><![CDATA[commonj.sdo.DataObject __result__2;
+{// create in_UpdateDocs
+	com.ibm.websphere.bo.BOFactory factory = 
+	   (com.ibm.websphere.bo.BOFactory) new com.ibm.websphere.sca.ServiceManager().locateService("com/ibm/websphere/bo/BOFactory");
+	 __result__2 = factory.create("http://OM_DesasociarDocumentos","in_UpdateDocs");
+}
+in_updateDocs = __result__2;
+java.lang.Object __result__4 = null;
+try {
+	{// UpdDocumentos
+		java.util.HashMap inputMap = new java.util.HashMap();
+		java.util.HashMap outputMap = new java.util.HashMap();
+		inputMap.put("out_BuscarDocumentos", documentoAux_out);
+		outputMap.put("in_UpdateDocs", in_updateDocs);
+		com.ibm.wbiserver.map.MapService _serv = 
+			(com.ibm.wbiserver.map.MapService)new com.ibm.websphere.sca.ServiceManager().locateService("com/ibm/wbiserver/map/MapService");
+		_serv.transform("http://OM_DesasociarDocumentos", "UpdDocumentos", inputMap, outputMap, ((com.ibm.wbiserver.relationshipservice.common.ExecutionContext)__result__4));
+	}
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapFailureException ex){
+	com.ibm.wbiserver.map.exceptions.WBIMapFailureException __result__7;
+	ex.printStackTrace();
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException ex){
+	com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException __result__10;
+	ex.printStackTrace();
+}
+catch(com.ibm.wbiserver.map.exceptions.WBIMapServiceException ex){
+	com.ibm.wbiserver.map.exceptions.WBIMapServiceException __result__13;
+	ex.printStackTrace();
+}
+
+//@generated:com.ibm.wbit.activity.ui
+//<?xml version="1.0" encoding="UTF-8"?>
+//<com.ibm.wbit.activity:CompositeActivity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ibm.wbit.activity="http:///com/ibm/wbit/activity.ecore" name="ActivityMethod">
+//  <result name="Result">
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="void"/>
+//  </result>
+//  <exceptions>
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.bpe.api.ProcessException"/>
+//  </exceptions>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="documentoAux_out" variable="true">
+//    <dataOutputs target="//@executableElements.4/@parameters.0"/>
+//    <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="out_BuscarDocumentos" namespace="http://OM_DesasociarDocumentos"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:LibraryActivity" name="create in_UpdateDocs" description="create a new in_UpdateDocs {http://OM_DesasociarDocumentos}" template="com.ibm.websphere.bo.BOFactory factory = &#xA;   (com.ibm.websphere.bo.BOFactory) new com.ibm.websphere.sca.ServiceManager().locateService(&quot;com/ibm/websphere/bo/BOFactory&quot;);&#xA; &lt;%return%> factory.create(&quot;http://OM_DesasociarDocumentos&quot;,&quot;in_UpdateDocs&quot;);">
+//    <result>
+//      <dataOutputs target="//@executableElements.2"/>
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="in_UpdateDocs" namespace="http://OM_DesasociarDocumentos"/>
+//    </result>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" dataInputs="//@executableElements.1/@result/@dataOutputs.0" value="in_updateDocs" variable="true">
+//    <dataOutputs target="//@executableElements.4/@parameters.1"/>
+//    <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="in_UpdateDocs" namespace="http://OM_DesasociarDocumentos"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="null" assignable="false">
+//    <dataOutputs target="//@executableElements.4/@parameters.2"/>
+//    <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Object"/>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:LibraryActivity" name="UpdDocumentos" description="perform mapping {0}UpdDocumentos {http://OM_DesasociarDocumentos}" template="java.util.HashMap inputMap = new java.util.HashMap();&#xA;java.util.HashMap outputMap = new java.util.HashMap();&#xA;inputMap.put(&quot;out_BuscarDocumentos&quot;, &lt;%out_BuscarDocumentos%>);&#xA;outputMap.put(&quot;in_UpdateDocs&quot;, &lt;%in_UpdateDocs%>);&#xA;com.ibm.wbiserver.map.MapService _serv = &#xA;&#x9;(com.ibm.wbiserver.map.MapService)new com.ibm.websphere.sca.ServiceManager().locateService(&quot;com/ibm/wbiserver/map/MapService&quot;);&#xA;_serv.transform(&quot;http://OM_DesasociarDocumentos&quot;, &quot;UpdDocumentos&quot;, inputMap, outputMap, &lt;%executionContext%>);">
+//    <parameters name="out_BuscarDocumentos" dataInputs="//@executableElements.0/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="out_BuscarDocumentos" namespace="http://OM_DesasociarDocumentos"/>
+//    </parameters>
+//    <parameters name="in_UpdateDocs" dataInputs="//@executableElements.2/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:XSDElementType" name="in_UpdateDocs" namespace="http://OM_DesasociarDocumentos"/>
+//    </parameters>
+//    <parameters name="executionContext" dataInputs="//@executableElements.3/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.relationshipservice.common.ExecutionContext"/>
+//    </parameters>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.5/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </exceptions>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.6/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </exceptions>
+//    <exceptions>
+//      <dataOutputs target="//@executableElements.7/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </exceptions>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.0/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" input="true">
+//      <dataOutputs target="//@executableElements.5/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapFailureException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.5/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.1/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" input="true">
+//      <dataOutputs target="//@executableElements.6/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapNotFoundException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.6/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//  </executableElements>
+//  <executableElements xsi:type="com.ibm.wbit.activity:ExceptionHandler" name="Exception Handler" collapsed="true">
+//    <parameters name="ex" dataInputs="//@executableElements.4/@exceptions.2/@dataOutputs.0">
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </parameters>
+//    <executableElements xsi:type="com.ibm.wbit.activity:Expression" value="ex" input="true">
+//      <dataOutputs target="//@executableElements.7/@executableElements.1/@parameters.0"/>
+//      <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="com.ibm.wbiserver.map.exceptions.WBIMapServiceException"/>
+//    </executableElements>
+//    <executableElements xsi:type="com.ibm.wbit.activity:JavaActivity" name="printStackTrace" category="java.lang.Throwable" className="java.lang.Throwable" memberName="printStackTrace">
+//      <parameters name="Throwable" dataInputs="//@executableElements.7/@executableElements.0/@dataOutputs.0">
+//        <type xsi:type="com.ibm.wbit.activity:JavaElementType" name="java.lang.Throwable"/>
+//      </parameters>
+//    </executableElements>
+//  </executableElements>
+//</com.ibm.wbit.activity:CompositeActivity>
+//@generated:end
+//!SMAP!*S WBIACTDBG
+//!SMAP!*L
+//!SMAP!2:1,6
+//!SMAP!3:7,1
+//!SMAP!4:8,1
+//!SMAP!5:10,9
+//!SMAP!7:21,1
+//!SMAP!8:22,1
+//!SMAP!10:25,1
+//!SMAP!11:26,1
+//!SMAP!13:29,1
+//!SMAP!14:30,1
+//!SMAP!1000000:140,1]]></wpc:javaCode>
+                </wpc:script>
+              </bpws:invoke>
+            </bpws:case>
+            <bpws:otherwise wpc:id="66">
+              <bpws:invoke name="SnippetErrorResultadoDesasociar" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="ErrorResultadoDesasociar" wpc:id="68">
+                <wpc:script>
+                  <wpc:javaCode><![CDATA[time_fin = System.currentTimeMillis();
+String MENSAJE = "Tiempo: " + (System.currentTimeMillis() - time_inicio) + " ms. Error al desasociar documento."; 
+Log.logTomAplicaciones_error(uuid + ";BPEL;" + processInstance().getDisplayName()+ ";" + "MENSAJE");]]></wpc:javaCode>
+                </wpc:script>
+              </bpws:invoke>
+            </bpws:otherwise>
+          </bpws:switch>
+        </bpws:sequence>
+      </bpws:scope>
+    </bpws:forEach>
+    <bpws:switch name="Choice" wpc:displayName="Documentos para updatear?" wpc:id="109">
+      <bpws:case wpc:displayName="Si" wpc:id="110">
+        <bpws:condition expressionLanguage="http://www.ibm.com/xmlns/prod/websphere/business-process/expression-lang/java/6.0.0/"><![CDATA[boolean __result__1 = false;
+
+if (in_updateDocs != null){
+__result__1 = true;}
+
+return __result__1;]]></bpws:condition>
+        <bpws:sequence name="HiddenSequence1" wpc:id="1073741935">
+          <bpws:invoke name="UpateDocumento" operation="UpdateDocus" partnerLink="UpdateDocsPartner" portType="ns5:UpdateDocs" wpc:continueOnError="inherit" wpc:displayName="UpateDocumento" wpc:id="63">
+            <wpc:input>
+              <wpc:parameter name="input_UpdateDocs" variable="in_updateDocs"/>
+            </wpc:input>
+            <wpc:output>
+              <wpc:parameter name="output_UpdateDocs" variable="estado"/>
+            </wpc:output>
+            <bpws:catchAll wpc:id="64">
+              <bpws:invoke name="SnippetErrorUpdate1" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="ErrorUpdate" wpc:id="65">
+                <wpc:script>
+                  <wpc:javaCode><![CDATA[time_fin = System.currentTimeMillis();
+String MENSAJE = "Tiempo: " + (System.currentTimeMillis() - time_inicio) + " ms. Error al ejecutar actualizacion del estado del documento."; 
+Log.logTomAplicaciones_error(uuid + ";BPEL;" + processInstance().getDisplayName()+ ";" + "MENSAJE");
+]]></wpc:javaCode>
+                </wpc:script>
+              </bpws:invoke>
+            </bpws:catchAll>
+          </bpws:invoke>
+          <bpws:assign name="AsignarEstadoFinal" wpc:displayName="Asignar Estado Final" wpc:id="88">
+            <bpws:copy>
+              <bpws:from>true</bpws:from>
+              <bpws:to variable="output_DesasociarDocumentos">
+                <bpws:query queryLanguage="http://www.w3.org/TR/1999/REC-xpath-19991116"><![CDATA[resultado]]></bpws:query>
+              </bpws:to>
+            </bpws:copy>
+          </bpws:assign>
+        </bpws:sequence>
+      </bpws:case>
+      <bpws:otherwise wpc:id="112">
+        <bpws:sequence name="HiddenSequence3" wpc:id="1073741957">
+          <bpws:invoke name="Snippet_LogFin1" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="Log Final" wpc:id="113">
+            <wpc:script>
+              <wpc:javaCode><![CDATA[time_fin = System.currentTimeMillis();
+String MENSAJE = "Tiempo: " + (System.currentTimeMillis() - time_inicio) + " ms. No hubo updates para los documentos seleccionados"; 
+Log.logTomAplicaciones_error(uuid + ";BPEL;" + processInstance().getDisplayName()+ ";" + "MENSAJE");]]></wpc:javaCode>
+            </wpc:script>
+          </bpws:invoke>
+          <bpws:assign name="Assign" wpc:displayName="Asignar Estado Final" wpc:id="134">
+            <bpws:copy>
+              <bpws:from>false</bpws:from>
+              <bpws:to variable="output_DesasociarDocumentos">
+                <bpws:query queryLanguage="http://www.w3.org/TR/1999/REC-xpath-19991116"><![CDATA[resultado]]></bpws:query>
+              </bpws:to>
+            </bpws:copy>
+          </bpws:assign>
+        </bpws:sequence>
+      </bpws:otherwise>
+    </bpws:switch>
+    <bpws:invoke name="Snippet_LogFin" operation="null" partnerLink="null" portType="wpc:null" wpc:continueOnError="inherit" wpc:displayName="Log Final" wpc:id="33">
+      <wpc:script>
+        <wpc:javaCode><![CDATA[time_fin = System.currentTimeMillis();
+String MENSAJE = "Tiempo: " + (System.currentTimeMillis() - time_inicio) + " ms. Fin de la instancia"; 
+Log.logTomAplicaciones_error(uuid + ";BPEL;" + processInstance().getDisplayName()+ ";" + "MENSAJE");]]></wpc:javaCode>
+      </wpc:script>
+    </bpws:invoke>
+    <bpws:reply name="Reply" operation="invoke" partnerLink="AIS_DesasociarDocumentos" portType="ns1:AIS_DesasociarDocumentos" wpc:displayName="Reply" wpc:id="5">
+      <wpc:input>
+        <wpc:parameter name="output_DesasociarDocumentos" variable="output_DesasociarDocumentos"/>
+      </wpc:input>
+    </bpws:reply>
+  </bpws:sequence>
+</bpws:process>

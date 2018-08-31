@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="UpdateDocs" targetNamespace="http://OM_DesasociarDocumentos/UpdateDocs" xmlns:bons1="http://OM_DesasociarDocumentos" xmlns:tns="http://OM_DesasociarDocumentos/UpdateDocs" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+    <xsd:schema targetNamespace="http://OM_DesasociarDocumentos/UpdateDocs">
+            <xsd:import namespace="http://OM_DesasociarDocumentos" schemaLocation="out_UpdateDocs.xsd"/>
+            <xsd:import namespace="http://OM_DesasociarDocumentos" schemaLocation="in_UpdateDocs.xsd"/>
+            <xsd:element name="UpdateDocus">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="input_UpdateDocs" nillable="true" type="bons1:in_UpdateDocs"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+            <xsd:element name="operation1Response">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="output_UpdateDocs" nillable="true" type="bons1:out_UpdateDocs"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+        </xsd:schema>
+  </wsdl:types>
+    <wsdl:message name="UpdateDocusRequestMsg">
+    <wsdl:part element="tns:UpdateDocus" name="UpdateDocusParameters"/>
+  </wsdl:message>
+    <wsdl:message name="operation1ResponseMsg">
+    <wsdl:part element="tns:operation1Response" name="operation1Result"/>
+  </wsdl:message>
+    <wsdl:portType name="UpdateDocs">
+        <wsdl:operation name="UpdateDocus">
+      <wsdl:input message="tns:UpdateDocusRequestMsg" name="operation1Request"/>
+      <wsdl:output message="tns:operation1ResponseMsg" name="operation1Response"/>
+    </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

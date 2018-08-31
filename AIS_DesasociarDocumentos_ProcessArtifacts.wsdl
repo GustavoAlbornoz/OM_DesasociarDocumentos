@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="AIS_DesasociarDocumentos_Process" targetNamespace="http://TOMPHVO/AIS/AIS_DesasociarDocumentos/AIS_DesasociarDocumentos_ProcessArtifacts" xmlns:ns="http://OM_DesasociarDocumentos/DatosDocumentos" xmlns:ns0="http://OM_DesasociarDocumentos/DesasociarDocumentoREST" xmlns:ns1="http://OM_DesasociarDocumentos/UpdateDocs" xmlns:ns2="http://OM_DesasociarDocumentos/HttpDesasociar" xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:tns="http://TOMPHVO/AIS/AIS_DesasociarDocumentos/AIS_DesasociarDocumentos_ProcessArtifacts" xmlns:wsdl0="http://TOMPHVO/AIS/AIS_DesasociarDocumentos" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <plnk:partnerLinkType name="AIS_DesasociarDocumentosPLT">
+    <plnk:role name="Interface">
+      <plnk:portType name="wsdl0:AIS_DesasociarDocumentos"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="DatosDocumentosPartnerPLT">
+    <plnk:role name="Reference">
+      <plnk:portType name="ns:DatosDocumentos"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="UpdatePartnerPLT">
+    <plnk:role name="Reference">
+      <plnk:portType name="ns1:UpdateDocs"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="HttpDesasociarPartnerPLT">
+    <plnk:role name="Reference">
+      <plnk:portType name="ns2:HttpDesasociar"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+    <wsdl:import location="AIS_DesasociarDocumentos.wsdl" namespace="http://TOMPHVO/AIS/AIS_DesasociarDocumentos"/>
+    <wsdl:import location="DatosDocumentos.wsdl" namespace="http://OM_DesasociarDocumentos/DatosDocumentos"/>
+    <wsdl:import location="UpdateDocs.wsdl" namespace="http://OM_DesasociarDocumentos/UpdateDocs"/>
+    <wsdl:import location="HttpDesasociar.wsdl" namespace="http://OM_DesasociarDocumentos/HttpDesasociar"/>
+</wsdl:definitions>

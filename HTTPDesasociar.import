@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scdl:import xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:configuration_6.1.0="http://www.ibm.com/xmlns/prod/websphere/j2ca/configuration/6.1.0" xmlns:http="http://www.ibm.com/xmlns/prod/websphere/scdl/http/6.1.0" xmlns:ns1="http://OM_DesasociarDocumentos/HttpDesasociar" xmlns:scdl="http://www.ibm.com/xmlns/prod/websphere/scdl/6.0.0" xmlns:wsdl="http://www.ibm.com/xmlns/prod/websphere/scdl/wsdl/6.0.0" displayName="HTTPDesasociar" name="HTTPDesasociar">
+  <interfaces>
+    <interface xsi:type="wsdl:WSDLPortType" preferredInteractionStyle="sync" portType="ns1:HttpDesasociar">
+      <scdl:interfaceQualifier xsi:type="scdl:JoinTransaction" value="false"/>
+    </interface>
+  </interfaces>
+  <esbBinding xsi:type="http:HTTPImportBinding" defaultDataBindingReferenceName="configuration_6.1.0:UTF8JsonDataHandler">
+    <importInteraction endpointURL="http://dfnet1was01.bancogalicia.com.ar/Desasociar/api/desasociar/" httpMethod="DELETE"/>
+    <methodBinding method="HTTPDesas">
+      <importInteraction httpMethod="DELETE"/>
+    </methodBinding>
+  </esbBinding>
+</scdl:import>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="HttpDesasociar" targetNamespace="http://OM_DesasociarDocumentos/HttpDesasociar" xmlns:bons1="http://OM_DesasociarDocumentos" xmlns:tns="http://OM_DesasociarDocumentos/HttpDesasociar" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+    <xsd:schema targetNamespace="http://OM_DesasociarDocumentos/HttpDesasociar">
+      <xsd:import namespace="http://OM_DesasociarDocumentos" schemaLocation="out_DesaREST.xsd"/>
+      <xsd:import namespace="http://OM_DesasociarDocumentos" schemaLocation="in_DesaREST.xsd"/>
+      <xsd:element name="HTTPDesas">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="input_desas" nillable="true" type="bons1:in_DesaREST"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="HTTPDesasResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="output_desas" nillable="true" type="bons1:out_DesaREST"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+    <wsdl:message name="HTTPDesasRequestMsg">
+    <wsdl:part element="tns:HTTPDesas" name="HTTPDesasParameters"/>
+  </wsdl:message>
+    <wsdl:message name="HTTPDesasResponseMsg">
+    <wsdl:part element="tns:HTTPDesasResponse" name="HTTPDesasResult"/>
+  </wsdl:message>
+    <wsdl:portType name="HttpDesasociar">
+    <wsdl:operation name="HTTPDesas">
+      <wsdl:input message="tns:HTTPDesasRequestMsg" name="HTTPDesasRequest"/>
+      <wsdl:output message="tns:HTTPDesasResponseMsg" name="HTTPDesasResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

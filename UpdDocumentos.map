@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:businessObjectMap xmlns:UpdDocumentos="http://OM_DesasociarDocumentos" xmlns:map="http://www.ibm.com/xmlns/prod/websphere/wbiserver/map/6.0.0" targetNamespace="http://OM_DesasociarDocumentos">
+  <map:name>UpdDocumentos</map:name>
+  <map:inputBusinessObjectVariable businessObjectRef="UpdDocumentos:out_BuscarDocumentos" name="out_BuscarDocumentos"/>
+  <map:outputBusinessObjectVariable businessObjectRef="UpdDocumentos:in_UpdateDocs" name="in_UpdateDocs"/>
+  <map:propertyMap executionOrder="1">
+    <map:move>
+      <map:input businessObjectVariableRef="out_BuscarDocumentos" property="BuscarDocumentos/idFilenet"/>
+      <map:output businessObjectVariableRef="in_UpdateDocs" property="idFilenet"/>
+    </map:move>
+  </map:propertyMap>
+</map:businessObjectMap>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scdl:component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://TOMPHVO/AIS/AIS_DesasociarDocumentos" xmlns:ns2="http://OM_DesasociarDocumentos/DatosDocumentos" xmlns:ns3="http://OM_DesasociarDocumentos/DesasociarDocumentoREST" xmlns:ns4="http://OM_DesasociarDocumentos/UpdateDocs" xmlns:ns5="http://OM_DesasociarDocumentos/HttpDesasociar" xmlns:process="http://www.ibm.com/xmlns/prod/websphere/scdl/business-process/6.0.0" xmlns:scdl="http://www.ibm.com/xmlns/prod/websphere/scdl/6.0.0" xmlns:wsdl="http://www.ibm.com/xmlns/prod/websphere/scdl/wsdl/6.0.0" displayName="DesasociarDocumentos_Process" name="DesasociarDocumentos_Process">
+  <interfaces>
+    <interface xsi:type="wsdl:WSDLPortType" preferredInteractionStyle="sync" portType="ns1:AIS_DesasociarDocumentos">
+      <scdl:interfaceQualifier xsi:type="scdl:JoinTransaction" value="true"/>
+    </interface>
+  </interfaces>
+  <references>
+    <reference name="DatosDocumentosPartner">
+      <interface xsi:type="wsdl:WSDLPortType" portType="ns2:DatosDocumentos"/>
+      <scdl:referenceQualifier xsi:type="scdl:SuspendTransaction" value="false"/>
+      <scdl:referenceQualifier xsi:type="scdl:Reliability"/>
+      <scdl:referenceQualifier xsi:type="scdl:DeliverAsyncAt" value="commit"/>
+      <wire target="ObtenerDocumento"/>
+    </reference>
+    <reference name="UpdateDocsPartner">
+      <interface xsi:type="wsdl:WSDLPortType" portType="ns4:UpdateDocs"/>
+      <scdl:referenceQualifier xsi:type="scdl:SuspendTransaction" value="false"/>
+      <scdl:referenceQualifier xsi:type="scdl:Reliability"/>
+      <scdl:referenceQualifier xsi:type="scdl:DeliverAsyncAt" value="commit"/>
+      <wire target="UpdateDocumentos"/>
+    </reference>
+    <reference name="HttpDesasociarPartner">
+      <interface xsi:type="wsdl:WSDLPortType" portType="ns5:HttpDesasociar"/>
+      <scdl:referenceQualifier xsi:type="scdl:SuspendTransaction" value="false"/>
+      <scdl:referenceQualifier xsi:type="scdl:Reliability"/>
+      <scdl:referenceQualifier xsi:type="scdl:DeliverAsyncAt" value="commit"/>
+      <wire target="HTTPDesasociar"/>
+    </reference>
+  </references>
+  <implementation xsi:type="process:ProcessImplementation">
+    <scdl:implementationQualifier xsi:type="scdl:Transaction" value="global"/>
+    <process bpel="/AIS_DesasociarDocumentos_Process.bpel"/>
+  </implementation>
+</scdl:component>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:businessObjectMap xmlns:MapeoValoresDocumentos="http://OM_DesasociarDocumentos" xmlns:input_DesasociarDocumentos="http://TOMPHVO" xmlns:map="http://www.ibm.com/xmlns/prod/websphere/wbiserver/map/6.0.0" targetNamespace="http://OM_DesasociarDocumentos">
+  <map:name>MapeoValoresDocumentos</map:name>
+  <map:inputBusinessObjectVariable businessObjectRef="input_DesasociarDocumentos:input_DesasociarDocumentos" name="input_DesasociarDocumentos"/>
+  <map:outputBusinessObjectVariable businessObjectRef="MapeoValoresDocumentos:in_BuscarDocumentos" name="in_BuscarDocumentos"/>
+  <map:propertyMap executionOrder="1">
+    <map:move>
+      <map:input businessObjectVariableRef="input_DesasociarDocumentos" property="documento/idFilenet"/>
+      <map:output businessObjectVariableRef="in_BuscarDocumentos" property="idFilenet"/>
+    </map:move>
+  </map:propertyMap>
+</map:businessObjectMap>
